@@ -75,7 +75,6 @@ def resize(w, h):
 
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
 
-# function to see more
 def show_more():
     global matrix, BLOCK_SIZE
     BLOCK_SIZE -= 1 if BLOCK_SIZE > 3 else 0
