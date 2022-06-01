@@ -20,3 +20,6 @@ Once you installed everything and started the game_of_life.pyw script, you can p
 - ```r``` : delete every alive cell, and restart the game.
 - ```s``` : slow the simulation by 30ms with each keystroke.
 - ```a``` : acceleratee the simulation by 30ms with each keystroke.
+- ```m``` : show more cells on the screen
+- ```l``` : show less cells on the screen
+- ```g``` : toggle grid display 
