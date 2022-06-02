@@ -90,13 +90,12 @@ def show_less():
     matrix = new_matrix.copy()
 
 def init_window():
-    global screen, WINDOW_WIDTH, WINDOW_HEIGHT
+    global screen
     running = True
     is_grid_visible = True
     is_editing = True
     is_playing = False
     title = 'Game of Life - Editing'
-    time_delay = 100
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
@@ -113,10 +112,6 @@ def init_window():
                     title = 'Game of Life - Playing' if is_playing else 'Game of Life'
                     title = 'Game of Life - Editing' if is_editing else title
                     pygame.display.set_caption(title)
-                elif pygame.key.name(event.key) == 's':
-                    time_delay = time_delay + 30
-                elif pygame.key.name(event.key) == 'a':
-                    time_delay = time_delay - 30 if time_delay > 0 else 0
                 elif pygame.key.name(event.key) == 'm':
                     show_more()
                 elif pygame.key.name(event.key) == 'l':
@@ -138,8 +133,6 @@ def init_window():
         if is_grid_visible:
             draw_grid()
         pygame.display.update()
-        if is_playing:
-            pygame.time.delay(time_delay)
 
 init_window()
 pygame.quit()

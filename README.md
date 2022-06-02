@@ -7,7 +7,7 @@ Dependencies:
 - Python ^3. If you don't have it installed, you can download and install it from https://www.python.org/
 - Pygame ^2. Follow the instructions Pygame's GitHub page: https://github.com/pygame/pygame
 
-Once you installed everything and started the game_of_life.pyw script, you can place squares in the grid where every black cell is alive, every white cell is dead. By hitting the ```space``` key, you can start the simulation, where every frame is generated based on the rules below. You can slow or accelerate the simulation by hitting the ```s``` (slow) or ```a``` (accelerate) keys. You can restart the game and the simulation by hitting the ```r``` key any time. 
+Once you installed everything and started the game_of_life.pyw script, you can place squares in the grid where every black cell is alive, every white cell is dead. By hitting the ```space``` key, you can start the simulation, where every frame is generated based on the rules below. You can restart the game and the simulation by hitting the ```r``` key any time. 
 
 ### Rules:
 1. Any live cell with two or three live neighbours survives.
@@ -18,8 +18,6 @@ Once you installed everything and started the game_of_life.pyw script, you can p
 
 - ```space``` : switch mode between Editing and Playing. Default is Editing.
 - ```r``` : delete every alive cell, and restart the game.
-- ```s``` : slow the simulation by 30ms with each keystroke.
-- ```a``` : acceleratee the simulation by 30ms with each keystroke.
 - ```m``` : show more cells on the screen
 - ```l``` : show less cells on the screen
 - ```g``` : toggle grid display 

@@ -4,7 +4,6 @@ from pygame.locals import MOUSEBUTTONUP
 WINDOW_HEIGHT = 800
 WINDOW_WIDTH = 800
 BLOCK_SIZE = 20
-OFFSET = 20
 
 def draw_units():
     global alive_cells
@@ -15,10 +14,10 @@ def draw_units():
 def draw_grid():
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
         for y in range(0, WINDOW_HEIGHT, BLOCK_SIZE):
+            # rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
+            # pygame.draw.rect(screen, (255, 255, 255), rect)
             rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
-            pygame.draw.rect(screen, (255, 255, 255), rect)
-            rect = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
-            pygame.draw.rect(screen, (0, 0, 0), rect, 1)
+            pygame.draw.rect(screen, (100, 100, 100), rect, 1)
 
 def edit_unit(mouse_x, mouse_y):
     global alive_cells
@@ -60,14 +59,21 @@ def compute_new_step():
     next_alive.sort()
     alive_cells = next_alive
 
+def reset():
+    global alive_cells
+    alive_cells = []
+
 def main():
-    global screen, alive_cells
+    global screen, alive_cells, BLOCK_SIZE
     running = True
     is_editing = True
     is_playing = False
+    is_grid_visible = True
+    title = 'Game of Life - Editing'
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption(title)
 
     alive_cells = []
 
@@ -79,8 +85,16 @@ def main():
                 if pygame.key.name(event.key) == 'space':
                     is_playing = not is_playing
                     is_editing = not is_playing
-                elif pygame.key.name(event.key) == 'p':
-                    print(alive_cells)
+                    title = 'Game of Life - Playing' if is_playing else 'Game of Life - Editing'
+                    pygame.display.set_caption(title)
+                elif pygame.key.name(event.key) == 'm':
+                    BLOCK_SIZE -= 1
+                elif pygame.key.name(event.key) == 'l':
+                    BLOCK_SIZE += 1
+                elif pygame.key.name(event.key) == 'g':
+                    is_grid_visible = not is_grid_visible
+                elif pygame.key.name(event.key) == 'r':
+                    reset()
             elif event.type == MOUSEBUTTONUP and is_editing:
                 mouse_x, mouse_y = event.pos
                 edit_unit(mouse_x, mouse_y)
@@ -88,9 +102,10 @@ def main():
         if is_playing:
             compute_new_step()
 
-        #screen.fill((255, 255, 255))
-        draw_grid()
+        screen.fill((255, 255, 255))
         draw_units()
+        if is_grid_visible:
+            draw_grid()
         pygame.display.update()
 
 main()

@@ -5,7 +5,7 @@ import numpy as np
 WINDOW_HEIGHT = 800
 WINDOW_WIDTH = 800
 BLOCK_SIZE = 20
-OFFSET = 20
+OFFSET = 100
 
 matrix = np.zeros((WINDOW_WIDTH // BLOCK_SIZE + OFFSET, WINDOW_HEIGHT // BLOCK_SIZE + OFFSET), dtype=int)
 
@@ -103,16 +103,16 @@ def show_less():
     matrix = new_matrix.copy()
 
 def init_window():
-    global screen, WINDOW_WIDTH, WINDOW_HEIGHT
+    global screen
     running = True
     is_editing = True
     is_playing = False
     is_grid_visible = True
     title = 'Game of Life - Editing'
-    time_delay = 100
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    pygame.display.set_caption(title)
 
     while running:
         for event in pygame.event.get():
@@ -122,13 +122,8 @@ def init_window():
                 if pygame.key.name(event.key) == 'space':
                     is_playing = not is_playing
                     is_editing = not is_playing
-                    title = 'Game of Life - Playing' if is_playing else 'Game of Life'
-                    title = 'Game of Life - Editing' if is_editing else title
+                    title = 'Game of Life - Playing' if is_playing else 'Game of Life - Editing'
                     pygame.display.set_caption(title)
-                elif pygame.key.name(event.key) == 's':
-                    time_delay = time_delay + 30
-                elif pygame.key.name(event.key) == 'a':
-                    time_delay = time_delay - 30 if time_delay > 0 else 0
                 elif pygame.key.name(event.key) == 'm':
                     show_more()
                 elif pygame.key.name(event.key) == 'l':
@@ -148,8 +143,6 @@ def init_window():
         if is_grid_visible:
             draw_grid()
         pygame.display.update()
-        if is_playing:
-            pygame.time.delay(time_delay)
 
 init_window()
 pygame.quit()
