@@ -23,3 +23,8 @@ Once you installed everything and started the game_of_life.pyw script, you can p
 - ```m``` : show more cells on the screen
 - ```l``` : show less cells on the screen
 - ```g``` : toggle grid display 
+
+## Versions:
+- v1: Computes the next step by iterating through the cells and check if the cell is alive or dead. With that information, creates a new matrix based on the rules of the game. Problems: iterating through the array for each frame takes a *long* time; stores the cells in an array (that could be *really* large); the new step computation is not smart (means for every generation it checks *all* the alive and dead cells).
+
+- v2: Faster than v1. Computes the next step by filtering the alive cells and iterates through them. Checks the alive cells and their neighbours. (The logic behind is that every dead cell becomes only if there're enough alive cells around, so we don't need to check cells that are not surrounded by a living cell.) Problems: it still stores the cells in an array and not only the alive cells; 

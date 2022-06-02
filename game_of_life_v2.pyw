@@ -4,8 +4,8 @@ import numpy as np
 
 WINDOW_HEIGHT = 800
 WINDOW_WIDTH = 800
-BLOCK_SIZE = 10
-OFFSET = 100
+BLOCK_SIZE = 20
+OFFSET = 20
 
 matrix = np.zeros((WINDOW_WIDTH // BLOCK_SIZE + OFFSET, WINDOW_HEIGHT // BLOCK_SIZE + OFFSET), dtype=int)
 
@@ -43,28 +43,63 @@ def neighbours_count(x, y):
         matrix[x-1][y+1], matrix[x][y+1], matrix[x+1][y+1]
     ].count(1)
 
+
 def check_neighbours(x, y, new_matrix):
     global matrix
-
     for cell in neighbours_coords(x, y):
-        if matrix[cell[0]][cell[1]] == 0 and neighbours_count(cell[0], cell[1]) == 3:
-            new_matrix[cell[0]][cell[1]] = 1
-        
+        if matrix[cell] == 0 and neighbours_count(cell[0], cell[1]) == 3:
+                new_matrix[cell] = 1
 
 def compute_new_step():
     global matrix
     new_matrix = matrix.copy()
+    alive_cells = np.argwhere(matrix == 1)
     
-    for x in range(0, matrix.shape[0] - 1):
-        for y in range(0, matrix.shape[1] - 1):
-            if matrix[x][y] == 1:
-                check_neighbours(x, y, new_matrix)
+    for cell in alive_cells:
+        if cell[0] == WINDOW_WIDTH // BLOCK_SIZE + OFFSET - 2 or cell[1] == WINDOW_HEIGHT // BLOCK_SIZE + OFFSET - 2 or cell[0] == 1 or cell[1] == 1:
+            new_matrix[cell] = 0
+        else:
+            check_neighbours(cell[0], cell[1], new_matrix)
+            if neighbours_count(cell[0], cell[1]) == 2 or neighbours_count(cell[0], cell[1]) == 3:
+                new_matrix[cell[0]][cell[1]] = 1
+            else:
+                new_matrix[cell[0]][cell[1]] = 0
 
-                if neighbours_count(x, y) == 2 or neighbours_count(x, y) == 3:
-                    new_matrix[x][y] = 1
-                else:
-                    new_matrix[x][y] = 0
+    matrix = new_matrix.copy()
 
+def reset():
+    matrix.fill(0)
+
+def copy_matrixes(matrix, new_matrix):
+    for x in range(0, new_matrix.shape[0] - 1):
+        for y in range(0, new_matrix.shape[1] - 1):
+            try:
+                new_matrix[x][y] = matrix[x][y]
+            except:
+                new_matrix[x][y] = 0
+
+def resize(w, h):
+    global screen, WINDOW_WIDTH, WINDOW_HEIGHT, matrix
+    WINDOW_WIDTH = w
+    WINDOW_HEIGHT = h
+    new_matrix = np.zeros((WINDOW_WIDTH // BLOCK_SIZE + OFFSET, WINDOW_HEIGHT // BLOCK_SIZE + OFFSET), dtype=int)
+    copy_matrixes(matrix, new_matrix)
+    matrix = new_matrix.copy()
+
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
+
+def show_more():
+    global matrix, BLOCK_SIZE
+    BLOCK_SIZE -= 1 if BLOCK_SIZE > 3 else 0
+    new_matrix = np.zeros((WINDOW_WIDTH // BLOCK_SIZE + OFFSET, WINDOW_HEIGHT // BLOCK_SIZE + OFFSET), dtype=int)
+    copy_matrixes(matrix, new_matrix)
+    matrix = new_matrix.copy()
+
+def show_less():
+    global matrix, BLOCK_SIZE
+    BLOCK_SIZE += 1
+    new_matrix = np.zeros((WINDOW_WIDTH // BLOCK_SIZE + OFFSET, WINDOW_HEIGHT // BLOCK_SIZE + OFFSET), dtype=int)
+    copy_matrixes(matrix, new_matrix)
     matrix = new_matrix.copy()
 
 def init_window():
@@ -72,6 +107,9 @@ def init_window():
     running = True
     is_editing = True
     is_playing = False
+    is_grid_visible = True
+    title = 'Game of Life - Editing'
+    time_delay = 100
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -84,6 +122,21 @@ def init_window():
                 if pygame.key.name(event.key) == 'space':
                     is_playing = not is_playing
                     is_editing = not is_playing
+                    title = 'Game of Life - Playing' if is_playing else 'Game of Life'
+                    title = 'Game of Life - Editing' if is_editing else title
+                    pygame.display.set_caption(title)
+                elif pygame.key.name(event.key) == 's':
+                    time_delay = time_delay + 30
+                elif pygame.key.name(event.key) == 'a':
+                    time_delay = time_delay - 30 if time_delay > 0 else 0
+                elif pygame.key.name(event.key) == 'm':
+                    show_more()
+                elif pygame.key.name(event.key) == 'l':
+                    show_less()
+                elif pygame.key.name(event.key) == 'g':
+                    is_grid_visible = not is_grid_visible
+                elif pygame.key.name(event.key) == 'r':
+                    reset()
             elif event.type == MOUSEBUTTONUP and is_editing:
                 mouse_x, mouse_y = event.pos
                 edit_unit(mouse_x, mouse_y)
@@ -92,8 +145,11 @@ def init_window():
             compute_new_step()
 
         draw_units()
-        draw_grid()
+        if is_grid_visible:
+            draw_grid()
         pygame.display.update()
+        if is_playing:
+            pygame.time.delay(time_delay)
 
 init_window()
 pygame.quit()
