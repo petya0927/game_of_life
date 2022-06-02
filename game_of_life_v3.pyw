@@ -8,8 +8,9 @@ BLOCK_SIZE = 20
 def draw_units():
     global alive_cells
     for cell in alive_cells:
-        rect = pygame.Rect(cell[0] * BLOCK_SIZE, cell[1] * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)
-        pygame.draw.rect(screen, (0, 0, 0), rect)
+        if cell[0] >= 0 and cell[1] >= 0 and cell[0] <= WINDOW_WIDTH // BLOCK_SIZE and cell[1] <= WINDOW_HEIGHT // BLOCK_SIZE:
+            rect = pygame.Rect(cell[0] * BLOCK_SIZE, cell[1] * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE)
+            pygame.draw.rect(screen, (0, 0, 0), rect)
 
 def draw_grid():
     for x in range(0, WINDOW_WIDTH, BLOCK_SIZE):
@@ -88,7 +89,7 @@ def main():
                     title = 'Game of Life - Playing' if is_playing else 'Game of Life - Editing'
                     pygame.display.set_caption(title)
                 elif pygame.key.name(event.key) == 'm':
-                    BLOCK_SIZE -= 1
+                    BLOCK_SIZE = BLOCK_SIZE - 1 if BLOCK_SIZE > 1 else BLOCK_SIZE
                 elif pygame.key.name(event.key) == 'l':
                     BLOCK_SIZE += 1
                 elif pygame.key.name(event.key) == 'g':
